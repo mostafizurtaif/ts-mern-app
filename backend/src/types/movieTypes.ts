@@ -2,7 +2,6 @@ import { Date, Document, Types } from "mongoose";
 
 export interface IMovie extends Document {
   _id: Types.ObjectId;
-  __v?: number;
   title: string;
   notableCharacters?: string[];
   duration: number;
@@ -10,4 +9,5 @@ export interface IMovie extends Document {
   rating: number;
   createdAt?: Date;
   updatedAt?: Date;
+  __v?: number;
 }

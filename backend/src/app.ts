@@ -7,7 +7,7 @@ const app: Application = express();
 // Connects to the database
 connectDB();
 
-// Middleware to parse JSON
+// Middleware for parsing JSON
 app.use(express.json());
 
 // Routes

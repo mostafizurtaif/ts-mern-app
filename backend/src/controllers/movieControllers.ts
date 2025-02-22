@@ -1,20 +1,13 @@
 import { Request, Response } from "express";
 import { Document } from "mongoose";
-import Movie from "../models/Movie";
 import { IMovie } from "../types/movieTypes";
+import { createMovie } from "../services/movieServices";
 
-export const createMovie = async (req: Request, res: Response) => {
-  const { title, notableCharacters, duration, releaseYear, rating }: IMovie =
-    req.body;
+export const createMovieController = async (req: Request, res: Response) => {
+  const movieData: IMovie = req.body;
 
   try {
-    const movie: Document = await Movie.create({
-      title,
-      notableCharacters,
-      duration,
-      releaseYear,
-      rating,
-    });
+    const movie: Document = await createMovie(movieData);
 
     res.status(201).json({
       success: true,
