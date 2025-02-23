@@ -3,13 +3,10 @@ import { Document } from "mongoose";
 import { createMovie, getAllMovies } from "../services/movieServices";
 import { movieSchema } from "../schemas/movieSchema";
 import { JoiError, NotFoundError } from "../errors";
+import asyncHandler from "express-async-handler";
 
-export const createMovieController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const createMovieController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     const movieData = req.body;
     const { error } = movieSchema.validate(movieData);
 
@@ -24,17 +21,11 @@ export const createMovieController = async (
       message: "Movie created successfully",
       data: movie,
     });
-  } catch (err) {
-    next(err);
   }
-};
+);
 
-export const getAllMoviesController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllMoviesController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     const movies: Document[] = await getAllMovies();
 
     if (movies.length == 0) {
@@ -46,7 +37,5 @@ export const getAllMoviesController = async (
       message: "Successfully fetched all movies!",
       data: movies,
     });
-  } catch (err) {
-    next(err);
   }
-};
+);
