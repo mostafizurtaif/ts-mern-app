@@ -1,12 +1,15 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Document } from "mongoose";
-import { IMovie } from "../types/movieTypes";
 import { createMovie } from "../services/movieServices";
 
-export const createMovieController = async (req: Request, res: Response) => {
-  const movieData: IMovie = req.body;
-
+export const createMovieController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    const movieData = req.body;
+
     const movie: Document = await createMovie(movieData);
 
     res.status(201).json({
@@ -15,22 +18,6 @@ export const createMovieController = async (req: Request, res: Response) => {
       data: movie,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.name === "ValidationError") {
-        res.status(400).json({
-          success: false,
-          message: error.message,
-        });
-        console.error("Error adding movie: ", error.message);
-      } else {
-        res.status(500).json({
-          success: false,
-          message: error.message,
-        });
-        console.error("Internal server error: ", error.message);
-      }
-    } else {
-      console.error("Error: ", error);
-    }
+    next(error);
   }
 };
