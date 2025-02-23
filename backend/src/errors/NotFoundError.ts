@@ -1,5 +1,5 @@
-export class JoiError extends Error {
-  private statusCode: number = 400;
+export class NotFoundError extends Error {
+  private statusCode: number = 404;
 
   constructor(message: string) {
     super(message);
@@ -10,6 +10,6 @@ export class JoiError extends Error {
   }
 
   public toString(): string {
-    return `Joi ValidationError: ${this.message}`;
+    return `NotFoundError: ${this.message}`;
   }
 }

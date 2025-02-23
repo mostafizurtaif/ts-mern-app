@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import { connectDB } from "./config/db";
 import movieRoutes from "./routes/movieRoutes";
-import { errorHandler } from "./middleware/errorHandler";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app: Application = express();
 
