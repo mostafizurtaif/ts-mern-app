@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Document } from "mongoose";
 import { createMovie } from "../services/movieServices";
+import { movieSchema } from "../schemas/movieSchema";
+import { BadRequestError } from "../errors/BadRequestError";
 
 export const createMovieController = async (
   req: Request,
@@ -9,6 +11,11 @@ export const createMovieController = async (
 ) => {
   try {
     const movieData = req.body;
+    const { error } = movieSchema.validate(movieData);
+
+    if (error) {
+      throw new BadRequestError(error.details[0].message);
+    }
 
     const movie: Document = await createMovie(movieData);
 
@@ -17,7 +24,7 @@ export const createMovieController = async (
       message: "Movie created successfully",
       data: movie,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };

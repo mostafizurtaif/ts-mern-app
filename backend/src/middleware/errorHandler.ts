@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { BadRequestError } from "../errors/BadRequestError";
 
 export const errorHandler = (
   error: Error,
@@ -8,6 +9,14 @@ export const errorHandler = (
 ) => {
   console.error("Error: ", error.message);
 
+  if (error instanceof BadRequestError) {
+    return res.status(error.getStatusCode()).json({
+      success: false,
+      message: error.message,
+    });
+  }
+
+  // Error thrown by MongoDB based on mongoose.Schema
   if (error.name === "ValidationError") {
     return res.status(400).json({ success: false, message: error.message });
   }
