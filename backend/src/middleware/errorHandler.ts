@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { BadRequestError } from "../errors/BadRequestError";
+import { JoiError } from "../errors/JoiError";
+import { MongoValidationError } from "../errors/MongoValidationError";
 
 export const errorHandler = (
   error: Error,
@@ -7,19 +8,23 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error("Error: ", error.message);
+  if (error instanceof JoiError) {
+    console.error(`Joi ValidationError: ${error.message}`);
 
-  if (error instanceof BadRequestError) {
     return res.status(error.getStatusCode()).json({
       success: false,
       message: error.message,
     });
   }
 
-  // Error thrown by MongoDB based on mongoose.Schema
-  if (error.name === "ValidationError") {
-    return res.status(400).json({ success: false, message: error.message });
+  if (error instanceof MongoValidationError) {
+    console.error(`MongoDB ValidationError: ${error.message}`);
+
+    return res
+      .status(MongoValidationError.getStatusCode())
+      .json({ success: false, message: error.message });
   }
 
   res.status(500).json({ success: false, message: "Internal server error!" });
+  console.error("Error: ", error.message);
 };

@@ -1,4 +1,4 @@
-export class BadRequestError extends Error {
+export class JoiError extends Error {
   private statusCode: number = 400;
 
   constructor(message: string) {
