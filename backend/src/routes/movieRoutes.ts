@@ -3,6 +3,7 @@ import {
   createMovieController,
   getAllMoviesController,
   getMovieController,
+  updateMovieController,
 } from "../controllers/movieControllers";
 
 const router: Router = Router();
@@ -14,6 +15,7 @@ router.route("/movies")
 
 // prettier-ignore
 router.route("/movies/:id")
-  .get(getMovieController);
+  .get(getMovieController)
+  .put(updateMovieController);
 
 export default router;
