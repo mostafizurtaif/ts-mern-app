@@ -11,7 +11,7 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-export const connectDB = async () => {
+export const connectDB = async (): Promise<void> => {
   try {
     await mongoose.connect(MONGO_URI);
     console.log("Database connected successfully!");

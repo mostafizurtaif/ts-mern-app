@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
 import {
   createMovie,
   getAllMovies,
   getMovie,
   updateMovie,
+  deleteMovie,
 } from "../services/movieServices";
 import { movieSchema } from "../schemas/movieSchema";
-import { JoiError, NotFoundError, BadRequestError } from "../errors";
+import { JoiError, NotFoundError } from "../errors";
 import asyncHandler from "express-async-handler";
 
 export const createMovieController = asyncHandler(
@@ -75,6 +75,19 @@ export const updateMovieController = asyncHandler(
       success: true,
       message: "Movie updated successfully!",
       data: updatedMovie,
+    });
+  }
+);
+
+export const deleteMovieController = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    await deleteMovie(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Movie deleted successfully!",
     });
   }
 );

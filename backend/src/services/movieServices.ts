@@ -1,7 +1,7 @@
-import { Types } from "mongoose";
 import { IMovie } from "../types/movieTypes";
 import Movie from "../models/Movie";
-import { BadRequestError, NotFoundError } from "../errors";
+import { NotFoundError } from "../errors";
+import validateObjectId from "../utils/validateObjectId";
 
 export const createMovie = async (movieData: IMovie): Promise<IMovie> => {
   return await Movie.create(movieData);
@@ -12,9 +12,7 @@ export const getAllMovies = async (): Promise<IMovie[]> => {
 };
 
 export const getMovie = async (id: string): Promise<IMovie> => {
-  if (!Types.ObjectId.isValid(id)) {
-    throw new BadRequestError("The provided ID is invalid!");
-  }
+  validateObjectId(id);
 
   const fetchedMovie = await Movie.findById(id);
 
@@ -29,8 +27,7 @@ export const updateMovie = async (
   id: string,
   movieData: IMovie
 ): Promise<IMovie> => {
-  // Performs ID validation and throws error if movie was not found
-  await getMovie(id);
+  validateObjectId(id);
 
   const updatedMovie = await Movie.findByIdAndUpdate(id, movieData, {
     new: true,
@@ -38,8 +35,18 @@ export const updateMovie = async (
   });
 
   if (!updatedMovie) {
-    throw new Error("An unexpected error occurred while updating the movie!");
+    throw new NotFoundError("No movie found with the provided ID!");
   }
 
   return updatedMovie;
+};
+
+export const deleteMovie = async (id: string): Promise<void> => {
+  validateObjectId(id);
+
+  const deletedMovie = await Movie.findByIdAndDelete(id);
+
+  if (!deletedMovie) {
+    throw new NotFoundError("No movie found with the provided ID!");
+  }
 };

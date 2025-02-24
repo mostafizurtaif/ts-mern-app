@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createMovieController,
+  deleteMovieController,
   getAllMoviesController,
   getMovieController,
   updateMovieController,
@@ -16,6 +17,7 @@ router.route("/movies")
 // prettier-ignore
 router.route("/movies/:id")
   .get(getMovieController)
-  .put(updateMovieController);
+  .put(updateMovieController)
+  .delete(deleteMovieController);
 
 export default router;
