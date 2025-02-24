@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { JoiError, MongoValidationError, NotFoundError } from "../errors";
+import {
+  BadRequestError,
+  JoiError,
+  MongoValidationError,
+  NotFoundError,
+} from "../errors";
 
 export const errorHandler = (
   error: Error,
@@ -25,6 +30,15 @@ export const errorHandler = (
   }
 
   if (error instanceof NotFoundError) {
+    console.error(error);
+
+    return res.status(error.getStatusCode()).json({
+      success: false,
+      message: error.message,
+    });
+  }
+
+  if (error instanceof BadRequestError) {
     console.error(error);
 
     return res.status(error.getStatusCode()).json({
